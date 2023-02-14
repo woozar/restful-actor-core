@@ -1,0 +1,1920 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Operator Workbook API",
+    "description": "Job API to provide CRUD operations for job definitions, job orders and job filters.",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://devd-manufacturing-api.dmgmori.com/opwb/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Jobs"
+    },
+    {
+      "name": "Attachments"
+    },
+    {
+      "name": "Scheduling"
+    },
+    {
+      "name": "Scheduling Events"
+    }
+  ],
+  "paths": {
+    "/jobs": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "getJobs",
+        "responses": {
+          "200": {
+            "description": "job",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Job"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "createJob",
+        "requestBody": {
+          "description": "job",
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJob"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created job",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/jobs/{jobId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/JobId"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "getJob",
+        "responses": {
+          "200": {
+            "description": "job",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "updateJob",
+        "requestBody": {
+          "description": "job",
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJob"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "updated job",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Job"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "deleteJob",
+        "responses": {
+          "200": {
+            "description": "job",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletedJob"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/jobs/batch/add": {
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "createJobs",
+        "requestBody": {
+          "description": "job",
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateJob"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "job",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Job"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/jobs/{jobId}/push/{serialNumber}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/JobId"
+        },
+        {
+          "$ref": "#/components/parameters/SerialNumber"
+        }
+      ],
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "pushJobToMaschine",
+        "requestBody": {
+          "description": "job",
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Ok"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/jobs/{jobId}/attachments": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/JobId"
+        }
+      ],
+      "get": {
+        "operationId": "getJobAttachments",
+        "tags": [
+          "Attachments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Attachment"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/jobs/{jobId}/attachments/{blobPath}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/JobId"
+        },
+        {
+          "$ref": "#/components/parameters/BlobPath"
+        }
+      ],
+      "post": {
+        "operationId": "addJobAttachment",
+        "tags": [
+          "Attachments"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAttachment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Attachment"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "get": {
+        "operationId": "getJobAttachment",
+        "tags": [
+          "Attachments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteJobAttachment",
+        "tags": [
+          "Attachments"
+        ],
+        "responses": {
+          "204": {
+            "description": "Ok"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/jobs/{jobId}/attachments/{blobPath}/upload-link": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/JobId"
+        },
+        {
+          "$ref": "#/components/parameters/BlobPath"
+        }
+      ],
+      "post": {
+        "operationId": "getJobAttachmentUploadUrl",
+        "tags": [
+          "Attachments"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "url"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/jobs/attachments/calculate-quota": {
+      "post": {
+        "tags": [
+          "Attachments"
+        ],
+        "summary": "Calculate quota",
+        "description": "Calculates the current size of the consumed storage.",
+        "operationId": "CalculateQuota",
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New file version added.",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "size"
+                  ],
+                  "properties": {
+                    "size": {
+                      "type": "integer",
+                      "description": "size of the consumed storage in Bytes"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/scheduling/production-orders": {
+      "get": {
+        "parameters": [
+          {
+            "name": "order_id_filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Scheduling"
+        ],
+        "description": "See what production orders are currently available.",
+        "operationId": "GetProductionOrders",
+        "responses": {
+          "200": {
+            "description": "list of production orders",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductionOrder"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Scheduling"
+        ],
+        "description": "create a new production-order",
+        "operationId": "createProductionOrder",
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductionOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionOrder"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/scheduling/production-orders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "2712065c-b751-46f8-bc96-0e9a7530ad58"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Scheduling"
+        ],
+        "description": "Get the production order with the given orderId.",
+        "operationId": "GetProductionOrder",
+        "responses": {
+          "200": {
+            "description": "production order",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionOrder"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Scheduling"
+        ],
+        "description": "Update the production order with the given orderId.",
+        "operationId": "UpdateProductionOrder",
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductionOrder"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "updated production order",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionOrder"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Scheduling"
+        ],
+        "description": "Delete the production order with the given orderId.",
+        "operationId": "DeleteProductionOrder",
+        "responses": {
+          "200": {
+            "description": "deleted production order",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductionOrder"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/scheduling/machine-schedules/{machine}/{date}": {
+      "parameters": [
+        {
+          "name": "machine",
+          "description": "either the serial or the machine id of the machine",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "45654654"
+        },
+        {
+          "name": "date",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "date"
+          },
+          "example": "2023-01-03T00:00:00.000Z"
+        }
+      ],
+      "get": {
+        "operationId": "GetMaschineSchedules",
+        "tags": [
+          "Scheduling"
+        ],
+        "responses": {
+          "200": {
+            "description": "added schedule",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Job"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/scheduling/operator-schedules": {
+      "post": {
+        "operationId": "CreateOperatorSchedule",
+        "tags": [
+          "Scheduling"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOperatorSchedule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "added schedule",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorSchedule"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "description": "Get all operator schedules",
+        "operationId": "GetOperatorSchedules",
+        "tags": [
+          "Scheduling"
+        ],
+        "responses": {
+          "200": {
+            "description": "operator schedules",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperatorSchedule"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/scheduling/operator-schedules/{scheduleId}": {
+      "parameters": [
+        {
+          "name": "scheduleId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "1a22604e-0417-4648-aec8-2e517c2c5f27"
+        }
+      ],
+      "get": {
+        "description": "Get the operator schedule with the given id",
+        "operationId": "GetOperatorSchedule",
+        "tags": [
+          "Scheduling"
+        ],
+        "responses": {
+          "200": {
+            "description": "operator schedule",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorSchedule"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "operationId": "SaveOperatorSchedule",
+        "tags": [
+          "Scheduling"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOperatorSchedule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "updated schedule",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorSchedule"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete the operator schedule with the given id",
+        "operationId": "DeleteOperatorSchedule",
+        "tags": [
+          "Scheduling"
+        ],
+        "responses": {
+          "200": {
+            "description": "deleted operator schedule",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatorSchedule"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/scheduling/machine-mappings": {
+      "get": {
+        "tags": [
+          "Scheduling"
+        ],
+        "operationId": "getMachineMappings",
+        "description": "get the list of machine mappings",
+        "responses": {
+          "200": {
+            "description": "list of machine mappings",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MachineMapping"
+                  }
+                },
+                "example": [
+                  {
+                    "machineId": "a1",
+                    "serialNumber": "123"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Scheduling"
+        ],
+        "operationId": "setMachineMappings",
+        "description": "get the list of machine mappings",
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MachineMapping"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "saved",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MachineMapping"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/scheduling/confirmations": {
+      "post": {
+        "operationId": "submitConfirmations",
+        "tags": [
+          "Scheduling"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/JobStarted"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JobPaused"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PartsProduced"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JobFinished"
+                    },
+                    {
+                      "$ref": "#/components/schemas/JobSetStatus"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "accepted"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/scheduling/events": {
+      "get": {
+        "summary": "Returns all webhooks",
+        "operationId": "GetWebhooks",
+        "tags": [
+          "Scheduling Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Webhook"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a new webhook",
+        "description": "You need to make sure the webhook, you want to register is compliant to the validation flow. https://docs.microsoft.com/de-de/azure/event-grid/webhook-event-delivery",
+        "operationId": "CreateWebhook",
+        "tags": [
+          "Scheduling Events"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json; charset=utf-8": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterWebhook"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/scheduling/events/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "example": "87e000f9-10ae-4580-afb3-0eae324dc1b7"
+        }
+      ],
+      "get": {
+        "summary": "Returns the event with the given id",
+        "operationId": "GetSchedulingEvent",
+        "tags": [
+          "Scheduling Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes the scheduling event with the given id",
+        "operationId": "DeleteSchedulingEvent",
+        "tags": [
+          "Scheduling Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/negotiate": {
+      "post": {
+        "tags": [
+          "Live Updates"
+        ],
+        "summary": "SignalR negotiate",
+        "description": "Used by signalR to receive token",
+        "operationId": "Negotiate",
+        "responses": {
+          "200": {
+            "description": "Data for the access to signalR",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/Negotiate"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "JobId": {
+        "name": "jobId",
+        "in": "path",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "example": "46e365b4-ff6c-44b9-9175-9be54226957d"
+      },
+      "SerialNumber": {
+        "name": "serialNumber",
+        "in": "path",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "example": "33445566"
+      },
+      "BlobPath": {
+        "name": "blobPath",
+        "in": "path",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "example": "file.extension"
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "bad request",
+        "content": {
+          "application/json; charset=utf-8": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "unauthorized",
+        "content": {
+          "application/json; charset=utf-8": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "not found",
+        "content": {
+          "application/json; charset=utf-8": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PlanningDetail": {
+        "type": "object",
+        "required": [
+          "activity",
+          "plannedStartAt",
+          "plannedEndAt"
+        ],
+        "properties": {
+          "activity": {
+            "type": "string"
+          },
+          "plannedStartAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "plannedEndAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateJob": {
+        "type": "object",
+        "required": [
+          "status",
+          "schemaVersion",
+          "title"
+        ],
+        "properties": {
+          "schemaVersion": {
+            "type": "string",
+            "enum": [
+              "1.0"
+            ],
+            "default": "1.0"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "object",
+            "required": [
+              "desired"
+            ],
+            "properties": {
+              "reported": {
+                "$ref": "#/components/schemas/JobStatus"
+              },
+              "desired": {
+                "$ref": "#/components/schemas/JobStatus"
+              }
+            }
+          },
+          "serialNumber": {
+            "type": "string",
+            "description": "Either serialNumber or machineId (or both) has to be provided.\nThere also needs to be a machine mapping for it in the scheduling api -> machine mappings.\n"
+          },
+          "machineId": {
+            "type": "string",
+            "description": "Either serialNumber or machineId (or both) has to be provided.\nThere also needs to be a machine mapping for it in the scheduling api -> machine mappings.\n"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/JobOperator"
+          },
+          "note": {
+            "type": "string"
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "plannedStartAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "plannedEndAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "planningDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanningDetail"
+            }
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "targetQuantity": {
+            "type": "integer"
+          },
+          "orderSize": {
+            "type": "integer"
+          },
+          "batchSize": {
+            "type": "integer"
+          },
+          "customer": {
+            "type": "string"
+          },
+          "externalSystemId": {
+            "type": "string"
+          }
+        }
+      },
+      "Job": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "createdAt",
+              "modifiedAt"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/JobEvent"
+                }
+              },
+              "status": {
+                "required": [
+                  "reported"
+                ]
+              },
+              "syncStatus": {
+                "type": "object",
+                "properties": {
+                  "machine": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "cloud": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "modifiedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "archivedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "attachments": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Attachment"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/CreateJob"
+          }
+        ]
+      },
+      "JobOperator": {
+        "type": "object",
+        "required": [
+          "id",
+          "givenName",
+          "surname"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "givenName": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          }
+        }
+      },
+      "DeletedJob": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Job"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "deletedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        ]
+      },
+      "JobEvent": {
+        "type": "object",
+        "required": [
+          "event",
+          "ts"
+        ],
+        "properties": {
+          "event": {
+            "type": "string",
+            "enum": [
+              "created",
+              "properties_updated",
+              "resources_updated",
+              "deleted"
+            ]
+          },
+          "ts": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "JobStatus": {
+        "type": "string",
+        "enum": [
+          "notStarted",
+          "ready",
+          "running",
+          "paused",
+          "interrupted",
+          "completed",
+          "aborted"
+        ]
+      },
+      "CreateAttachment": {
+        "type": "object",
+        "properties": {
+          "contentLanguage": {
+            "type": "string"
+          },
+          "resourceType": {
+            "type": "string"
+          },
+          "channelNumber": {
+            "type": "integer"
+          }
+        }
+      },
+      "Attachment": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateAttachment"
+          },
+          {
+            "type": "object",
+            "required": [
+              "blobPath",
+              "createdOn",
+              "contentLength",
+              "contentType",
+              "lastModified",
+              "lastModifiedBy",
+              "md5"
+            ],
+            "properties": {
+              "blobPath": {
+                "type": "string"
+              },
+              "createdOn": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "contentLength": {
+                "type": "number"
+              },
+              "contentType": {
+                "type": "number"
+              },
+              "lastModified": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "lastModifiedBy": {
+                "type": "string"
+              },
+              "md5": {
+                "type": "string",
+                "format": "hex"
+              }
+            }
+          }
+        ]
+      },
+      "CreateProductionOrder": {
+        "type": "object",
+        "required": [
+          "title",
+          "scheduledStartDate",
+          "scheduledDueDate",
+          "jobIds"
+        ],
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "description": "set by ERP system for the production order"
+          },
+          "customerOrderId": {
+            "type": "string",
+            "description": "set by the ERP system for the customer order"
+          },
+          "title": {
+            "type": "string"
+          },
+          "customerOrder": {
+            "type": "string"
+          },
+          "scheduledStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledDueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "notStarted",
+              "inProgress",
+              "paused",
+              "aborted",
+              "finished"
+            ],
+            "default": "notStarted"
+          },
+          "jobIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "example": {
+          "orderId": "SAP-458455",
+          "title": "Bicycles for Hoffmann GmbH",
+          "customerOrder": "X458-45454",
+          "scheduledStartDate": "2022-05-03T12:00:00.000Z",
+          "scheduledDueDate": "2022-06-03T12:00:00.000Z",
+          "status": "notStarted",
+          "jobIds": [
+            "46546546546546",
+            "76546546546587",
+            "86546546546313"
+          ]
+        }
+      },
+      "ProductionOrder": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ItemWithId"
+          },
+          {
+            "$ref": "#/components/schemas/CreateProductionOrder"
+          }
+        ],
+        "example": {
+          "id": "E55485-54684D-546546-5465",
+          "orderId": "SAP-458455",
+          "title": "Bicycles for Hoffmann GmbH",
+          "customerOrder": "X458-45454",
+          "scheduledStartDate": "2022-05-03T12:00:00Z",
+          "scheduledDueDate": "2022-06-03T12:00:00Z",
+          "status": "notStarted",
+          "jobIds": [
+            "46546546546546",
+            "76546546546587",
+            "86546546546313"
+          ]
+        }
+      },
+      "CreateOperatorSchedule": {
+        "type": "object",
+        "required": [
+          "scheduleItems"
+        ],
+        "properties": {
+          "operatorId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "928ef69a-1e26-4e09-ba4e-0faeac078d71"
+          },
+          "scheduleItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OperatorScheduleItem"
+            }
+          }
+        }
+      },
+      "OperatorSchedule": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ItemWithId"
+          },
+          {
+            "$ref": "#/components/schemas/CreateOperatorSchedule"
+          }
+        ]
+      },
+      "OperatorScheduleItem": {
+        "type": "object",
+        "required": [
+          "type",
+          "jobId",
+          "jobTitle",
+          "priority",
+          "plannedStartDateTime",
+          "dueDateTime"
+        ],
+        "properties": {
+          "plannedStartDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dueDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "job",
+              "other"
+            ]
+          },
+          "jobId": {
+            "type": "string"
+          },
+          "jobTitle": {
+            "type": "string"
+          },
+          "assetTitle": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "x-enumNames": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "customer": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "notStarted",
+              "inProgress",
+              "finished"
+            ],
+            "default": "notStarted"
+          },
+          "productionOrderId": {
+            "type": "string"
+          }
+        }
+      },
+      "MachineMapping": {
+        "type": "object",
+        "required": [
+          "machineId",
+          "serialNumber"
+        ],
+        "properties": {
+          "machineId": {
+            "type": "string"
+          },
+          "serialNumber": {
+            "type": "string"
+          },
+          "machineName": {
+            "type": "string"
+          }
+        }
+      },
+      "ItemWithId": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "JobConfirmation": {
+        "type": "object",
+        "required": [
+          "serialnumber",
+          "timestamp",
+          "jobId",
+          "eventType"
+        ],
+        "properties": {
+          "serialnumber": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "jobId": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string"
+          }
+        }
+      },
+      "JobStarted": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JobConfirmation"
+          },
+          {
+            "type": "object",
+            "required": [
+              "eventType",
+              "operatorId"
+            ],
+            "properties": {
+              "eventType": {
+                "type": "string",
+                "enum": [
+                  "job-started"
+                ]
+              },
+              "operatorId": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "serialnumber": "45654654",
+              "eventType": "job-started",
+              "timestamp": "2022-12-03T12:32:02Z",
+              "jobId": "12321321321321321",
+              "operatorId": "guid"
+            }
+          }
+        ]
+      },
+      "JobPaused": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JobConfirmation"
+          },
+          {
+            "type": "object",
+            "required": [
+              "eventType",
+              "operatorId"
+            ],
+            "properties": {
+              "eventType": {
+                "type": "string",
+                "enum": [
+                  "job-paused"
+                ]
+              },
+              "operatorId": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "serialnumber": "45654654",
+              "eventType": "job-paused",
+              "timestamp": "2022-12-03T12:32:02Z",
+              "jobId": "12321321321321321",
+              "operatorId": "guid"
+            }
+          }
+        ]
+      },
+      "JobSetStatus": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JobConfirmation"
+          },
+          {
+            "type": "object",
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "eventType": {
+                "type": "string",
+                "enum": [
+                  "job-status"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "notStarted",
+                  "ready",
+                  "running",
+                  "paused",
+                  "interrupted",
+                  "completed",
+                  "aborted"
+                ]
+              }
+            },
+            "example": {
+              "serialnumber": "45654654",
+              "eventType": "job-status",
+              "timestamp": "2022-12-03T12:32:02Z",
+              "status": "ready"
+            }
+          }
+        ]
+      },
+      "PartsProduced": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JobConfirmation"
+          },
+          {
+            "type": "object",
+            "required": [
+              "eventType",
+              "partsAll",
+              "partsProducedOk",
+              "partsProducedScrap"
+            ],
+            "properties": {
+              "eventType": {
+                "type": "string",
+                "enum": [
+                  "parts-produced"
+                ]
+              },
+              "partsAll": {
+                "type": "integer"
+              },
+              "partsProducedOk": {
+                "type": "integer"
+              },
+              "partsProducedScrap": {
+                "type": "integer"
+              }
+            },
+            "example": {
+              "serialnumber": "45654654",
+              "eventType": "parts-produced",
+              "timestamp": "2022-12-03T12:32:02Z",
+              "jobId": "12321321321321321",
+              "partsAll": 5,
+              "partsProducedOk": "4,",
+              "partsProducedScrap": "1,"
+            }
+          }
+        ]
+      },
+      "JobFinished": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JobConfirmation"
+          },
+          {
+            "type": "object",
+            "required": [
+              "eventType",
+              "status",
+              "operatorId"
+            ],
+            "properties": {
+              "eventType": {
+                "type": "string",
+                "enum": [
+                  "job-finished"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "success-complete",
+                  "success-partial",
+                  "aborted"
+                ]
+              },
+              "operatorId": {
+                "type": "string"
+              }
+            },
+            "example": {
+              "serialnumber": "45654654",
+              "eventType": "job-finished",
+              "timestamp": "2022-12-03T12:32:02Z",
+              "jobId": "12321321321321321",
+              "operatorId": "guid",
+              "status": "success-complete"
+            }
+          }
+        ]
+      },
+      "Webhook": {
+        "type": "object",
+        "required": [
+          "id",
+          "endpointUrl"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "endpointUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "RegisterWebhook": {
+        "type": "object",
+        "required": [
+          "endpointUrl"
+        ],
+        "properties": {
+          "endpointUrl": {
+            "type": "string",
+            "pattern": "^https\\:\\/\\/.+"
+          }
+        }
+      },
+      "Negotiate": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "accessToken": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "apiKeyHeader": {
+        "type": "apiKey",
+        "name": "Ocp-Apim-Subscription-Key",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKeyHeader": []
+    }
+  ]
+}
