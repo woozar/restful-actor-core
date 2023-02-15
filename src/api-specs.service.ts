@@ -44,7 +44,7 @@ export class ApiSpecsService {
     });
   }
 
-  public followRef(namespace: string[], ref: string): any {
+  public followRef({ namespace }: { namespace: string[] }, ref: string): any {
     if (typeof ref !== 'string') this.error('LoadSpec', namespace, '$ref must always be a string');
     const path = ref.split('/');
     try {
