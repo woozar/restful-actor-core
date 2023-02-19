@@ -1,19 +1,19 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { ApiSpecsService } from './api-specs.service';
-import { ApiSpec } from './models/api-spec.model';
+import { ApiSpec } from './models/spec.model';
 
-@Resolver((_of: any) => ApiSpec)
+@Resolver(/* istanbul ignore next */ () => ApiSpec)
 export class ApiSpecResolver {
   constructor(private apiSpecs: ApiSpecsService) {}
 
-  @Query(() => ApiSpec)
-  async getApiSpec(@Args('id', { type: () => String }) id: string): Promise<ApiSpec> {
+  @Query(/* istanbul ignore next */ () => ApiSpec)
+  async getApiSpec(@Args('id', { type: /* istanbul ignore next */ () => String }) id: string): Promise<ApiSpec> {
     const spec = this.apiSpecs.getApiSpecById(id);
     if (!spec) throw new Error(`Cannot find id ${id}`);
     return spec;
   }
 
-  @Query(() => [ApiSpec])
+  @Query(/* istanbul ignore next */ () => [ApiSpec])
   async getApiSpecs(): Promise<ApiSpec[]> {
     return this.apiSpecs.getApiSpecs();
   }
